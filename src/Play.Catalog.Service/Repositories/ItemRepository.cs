@@ -1,22 +1,16 @@
 using MongoDB.Driver;
 using Play.Catalog.Service.Entities;
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization;
 
 namespace Play.Catalog.Service.Repositories
 {
-    public class ItemsRepository
+    public class ItemsRepository : IItemsRepository
     {
         private const string collectionName = "items";
         private readonly IMongoCollection<Item> collection;
         private readonly FilterDefinitionBuilder<Item> filterBuilder = Builders<Item>.Filter;
 
-        public ItemsRepository()
+        public ItemsRepository(IMongoDatabase database)
         {
-            // TODO: move connection string to configuration
-            // and use dependency injection for MongoClient
-            var client = new MongoClient("mongodb://localhost:27017");
-            var database = client.GetDatabase("Catalog");
             collection = database.GetCollection<Item>(collectionName);
         }
 
