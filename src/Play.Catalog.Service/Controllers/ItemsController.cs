@@ -32,12 +32,35 @@ namespace Play.Catalog.Service.Controllers
             return item;
         }
 
+        // POST /items
         [HttpPost]
         public ActionResult<ItemDto> Post(CreateItemDto createItemDto)
         {
             var item = new ItemDto(Guid.NewGuid(), createItemDto.Name, createItemDto.Description, createItemDto.Price, DateTimeOffset.UtcNow);
             items.Add(item);
             return CreatedAtAction(nameof(GetById), new { id = item.Id }, item);
+        }
+
+        // PUT /items/{id}
+        [HttpPut("{id:guid}")]
+        public ActionResult<ItemDto> Put(Guid id, UpdateItemDto updateItemDto)
+        {
+            var existingItem = items.SingleOrDefault(i => i.Id == id);
+            if (existingItem is null)
+            {
+                return NotFound();
+            }
+
+            var updatedItem = existingItem with
+            {
+                Name = updateItemDto.Name,
+                Description = updateItemDto.Description,
+                Price = updateItemDto.Price,
+            };
+            var index = items.FindIndex(i => i.Id == id);
+            items[index] = updatedItem;
+
+            return Ok(updatedItem);
         }
     }
 }
