@@ -1,4 +1,5 @@
 using MongoDB.Driver;
+using Play.Catalog.Service.Entities;
 using Play.Catalog.Service.Repositories;
 using Play.Catalog.Service.Settings;
 
@@ -30,10 +31,13 @@ builder.Services.AddSingleton<IMongoDatabase>(sp =>
 });
 
 // Add repositories
-builder.Services.AddSingleton<IItemsRepository, ItemsRepository>();
+builder.Services.AddSingleton<IRepository<Item>>(serviceProvider =>
+{
+    var database = serviceProvider.GetRequiredService<IMongoDatabase>();
+    return new MongoRepository<Item>(database, "items");
+});
 
 // Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddControllers(options =>
 {
     options.SuppressAsyncSuffixInActionNames = false; // Keep the async suffix in action names
