@@ -3,7 +3,7 @@ namespace Play.Common.Settings
     public class MongoDbSettings
     {
         public required string Host { get; init; }
-        public int Port { get; init; }
+        public required int Port { get; init; }
 
         public string ConnectionString => $"mongodb://{Host}:{Port}";
     }
