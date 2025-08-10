@@ -1,4 +1,3 @@
-using MassTransit;
 using Play.Catalog.Service.Entities;
 using Play.Common.MassTransit;
 using Play.Common.MongoDB;
@@ -9,6 +8,20 @@ builder.Services
     .AddMongo(builder.Configuration)
     .AddMongoRepository<Item>("items")
     .AddMassTransitWithRabbitMQ(builder.Configuration);
+
+// Add CORS services
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowLocalhost5174", policy =>
+    {
+        policy.WithOrigins(
+                "http://localhost:5174"
+            )
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .SetIsOriginAllowedToAllowWildcardSubdomains();
+    });
+});
 
 // Add services to the container.
 builder.Services.AddControllers(options =>
@@ -25,9 +38,18 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
-}
 
-app.UseHttpsRedirection();
+    // Use CORS middleware com política permissiva em desenvolvimento
+    app.UseCors("AllowLocalhost5174");
+
+    // Em desenvolvimento, não redirecionar para HTTPS para evitar problemas de CORS
+    // app.UseHttpsRedirection(); // Comentado em desenvolvimento
+}
+else
+{
+    // Redirecionamento HTTPS apenas em produção
+    app.UseHttpsRedirection();
+}
 
 app.MapControllers();
 
