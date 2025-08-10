@@ -12,10 +12,10 @@ builder.Services
 // Add CORS services
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowLocalhost5174", policy =>
+    options.AddPolicy("AllowFrontend", policy =>
     {
         policy.WithOrigins(
-                "http://localhost:5174"
+                "http://localhost:*"
             )
             .AllowAnyHeader()
             .AllowAnyMethod()
@@ -40,7 +40,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 
     // Use CORS middleware com política permissiva em desenvolvimento
-    app.UseCors("AllowLocalhost5174");
+    app.UseCors("AllowFrontend");
 
     // Em desenvolvimento, não redirecionar para HTTPS para evitar problemas de CORS
     // app.UseHttpsRedirection(); // Comentado em desenvolvimento

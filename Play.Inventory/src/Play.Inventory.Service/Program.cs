@@ -13,9 +13,9 @@ builder.Services
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("CorsPolicy", policy =>
+    options.AddPolicy("AllowFrontend", policy =>
     {
-        policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:5174");
+        policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:*");
     });
 });
 
@@ -31,7 +31,7 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
-    app.UseCors("CorsPolicy");
+    app.UseCors("AllowFrontend");
 }
 else
 {
