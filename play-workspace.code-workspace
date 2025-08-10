@@ -1,0 +1,322 @@
+{
+  "folders": [
+    {
+      "name": "🎯 Play.Catalog.Service",
+      "path": "./Play.Catalog"
+    },
+    {
+      "name": "📦 Play.Inventory.Service", 
+      "path": "./Play.Inventory"
+    },
+    {
+      "name": "🌐 Play.Frontend",
+      "path": "./Play.Frontend"
+    },
+    {
+      "name": "🔧 Play.Common",
+      "path": "./Play.Common"
+    },
+    {
+      "name": "🐳 Play.Infra",
+      "path": "./Play.Infra"
+    }
+  ],
+  "settings": {
+    "files.exclude": {
+      "**/bin": true,
+      "**/obj": true,
+      "**/node_modules": true,
+      "**/.git": true,
+      "**/.DS_Store": true
+    },
+    "search.exclude": {
+      "**/bin": true,
+      "**/obj": true,
+      "**/node_modules": true,
+      "**/packages": true
+    },
+    "dotnet.defaultSolution": "Play.Catalog/Play.Catalog.sln",
+    "omnisharp.enableEditorConfigSupport": true,
+    "csharp.semanticHighlighting.enabled": true,
+    "typescript.preferences.importModuleSpecifier": "relative",
+    "javascript.preferences.importModuleSpecifier": "relative",
+    "emmet.includeLanguages": {
+      "javascript": "javascriptreact",
+      "typescript": "typescriptreact"
+    },
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": "explicit"
+    },
+    "files.associations": {
+      "*.cs": "csharp",
+      "*.csproj": "xml",
+      "*.sln": "xml",
+      "*.json": "jsonc"
+    },
+    "terminal.integrated.defaultProfile.osx": "zsh",
+    "terminal.integrated.defaultProfile.linux": "bash",
+    "terminal.integrated.defaultProfile.windows": "PowerShell",
+    "workbench.colorCustomizations": {
+      "activityBar.background": "#2d3748",
+      "activityBar.foreground": "#ffffff",
+      "activityBar.activeBorder": "#4299e1",
+      "titleBar.activeBackground": "#2d3748",
+      "titleBar.activeForeground": "#ffffff"
+    },
+    "explorer.sortOrder": "type",
+    "explorer.compactFolders": false,
+    "workbench.editor.enablePreview": false,
+    "workbench.editor.enablePreviewFromQuickOpen": false,
+    "git.autofetch": true,
+    "git.confirmSync": false,
+    "git.enableSmartCommit": true,
+    "dotnet.completion.showCompletionItemsFromUnimportedNamespaces": true,
+    "dotrush.roslyn.projectOrSolutionFiles": [
+      "/Users/stephenknupfer/Documents/projects/training/Play/Play.Catalog/Play.Catalog/Play.Catalog.sln",
+      "/Users/stephenknupfer/Documents/projects/training/Play/Play.Catalog/Play.Common/Play.Common.sln",
+      "/Users/stephenknupfer/Documents/projects/training/Play/Play.Catalog/Play.Catalog/src/Play.Catalog.Service/Play.Catalog.Service.csproj",
+      "/Users/stephenknupfer/Documents/projects/training/Play/Play.Catalog/Play.Common/src/Play.Common/Play.Common.csproj",
+      "/Users/stephenknupfer/Documents/projects/training/Play/Play.Catalog/Play.Inventory/src/Play.Inventory.Service/Play.Inventory.Service.csproj"
+    ]
+  },
+  "tasks": {
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "🔨 Build All Services",
+        "dependsOrder": "sequence",
+        "dependsOn": [
+          "🔧 Build Catalog Service",
+          "📦 Build Inventory Service"
+        ],
+        "group": "build",
+        "presentation": {
+          "echo": true,
+          "reveal": "always",
+          "focus": false,
+          "panel": "shared",
+          "showReuseMessage": true,
+          "clear": false
+        }
+      },
+      {
+        "label": "🔧 Build Catalog Service",
+        "type": "shell",
+        "command": "dotnet",
+        "args": ["build"],
+        "options": {
+          "cwd": "${workspaceFolder:🎯 Play.Catalog.Service}/src/Play.Catalog.Service"
+        },
+        "group": "build",
+        "presentation": {
+          "echo": true,
+          "reveal": "always",
+          "focus": false,
+          "panel": "shared",
+          "showReuseMessage": true,
+          "clear": false
+        },
+        "problemMatcher": "$msCompile"
+      },
+      {
+        "label": "📦 Build Inventory Service",
+        "type": "shell",
+        "command": "dotnet",
+        "args": ["build"],
+        "options": {
+          "cwd": "${workspaceFolder:📦 Play.Inventory.Service}/src/Play.Inventory.Service"
+        },
+        "group": "build",
+        "presentation": {
+          "echo": true,
+          "reveal": "always",
+          "focus": false,
+          "panel": "shared",
+          "showReuseMessage": true,
+          "clear": false
+        },
+        "problemMatcher": "$msCompile"
+      },
+      {
+        "label": "🚀 Start All Services",
+        "dependsOrder": "sequence",
+        "dependsOn": [
+          "🐳 Start Infrastructure",
+          "🔧 Start Catalog Service",
+          "📦 Start Inventory Service",
+          "🌐 Start Frontend"
+        ],
+        "group": "build",
+        "presentation": {
+          "echo": true,
+          "reveal": "always",
+          "focus": false,
+          "panel": "shared",
+          "showReuseMessage": true,
+          "clear": false
+        }
+      },
+      {
+        "label": "🐳 Start Infrastructure",
+        "type": "shell",
+        "command": "docker-compose",
+        "args": ["up", "-d"],
+        "options": {
+          "cwd": "${workspaceFolder:🎯 Play.Catalog.Service}/Play.Infra"
+        },
+        "group": "build",
+        "presentation": {
+          "echo": true,
+          "reveal": "always",
+          "focus": false,
+          "panel": "shared",
+          "showReuseMessage": true,
+          "clear": false
+        }
+      },
+      {
+        "label": "🔧 Start Catalog Service",
+        "type": "shell",
+        "command": "dotnet",
+        "args": ["run"],
+        "options": {
+          "cwd": "${workspaceFolder:🎯 Play.Catalog.Service}/src/Play.Catalog.Service"
+        },
+        "group": "build",
+        "presentation": {
+          "echo": true,
+          "reveal": "always",
+          "focus": false,
+          "panel": "shared",
+          "showReuseMessage": true,
+          "clear": false
+        }
+      },
+      {
+        "label": "📦 Start Inventory Service",
+        "type": "shell",
+        "command": "dotnet",
+        "args": ["run"],
+        "options": {
+          "cwd": "${workspaceFolder:📦 Play.Inventory.Service}/src/Play.Inventory.Service"
+        },
+        "group": "build",
+        "presentation": {
+          "echo": true,
+          "reveal": "always",
+          "focus": false,
+          "panel": "shared",
+          "showReuseMessage": true,
+          "clear": false
+        }
+      },
+      {
+        "label": "🌐 Start Frontend",
+        "type": "shell",
+        "command": "npm",
+        "args": ["run", "dev"],
+        "options": {
+          "cwd": "${workspaceFolder:🌐 Play.Frontend}"
+        },
+        "group": "build",
+        "presentation": {
+          "echo": true,
+          "reveal": "always",
+          "focus": false,
+          "panel": "shared",
+          "showReuseMessage": true,
+          "clear": false
+        }
+      },
+      {
+        "label": "🛑 Stop All Services",
+        "type": "shell",
+        "command": "make",
+        "args": ["stop"],
+        "options": {
+          "cwd": "${workspaceFolder:🎯 Play.Catalog.Service}"
+        },
+        "group": "build",
+        "presentation": {
+          "echo": true,
+          "reveal": "always",
+          "focus": false,
+          "panel": "shared",
+          "showReuseMessage": true,
+          "clear": false
+        }
+      },
+      {
+        "label": "📊 Show Status",
+        "type": "shell",
+        "command": "make",
+        "args": ["status"],
+        "options": {
+          "cwd": "${workspaceFolder:🎯 Play.Catalog.Service}"
+        },
+        "group": "build",
+        "presentation": {
+          "echo": true,
+          "reveal": "always",
+          "focus": false,
+          "panel": "shared",
+          "showReuseMessage": true,
+          "clear": false
+        }
+      }
+    ]
+  },
+  "launch": {
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "🔧 Debug Catalog Service",
+        "type": "coreclr",
+        "request": "launch",
+        "preLaunchTask": "🔧 Build Catalog Service",
+        "program": "${workspaceFolder:🎯 Play.Catalog.Service}/src/Play.Catalog.Service/bin/Debug/net9.0/Play.Catalog.Service.dll",
+        "args": ["--urls", "https://localhost:7224;http://localhost:5058"],
+        "cwd": "${workspaceFolder:🎯 Play.Catalog.Service}/src/Play.Catalog.Service",
+        "stopAtEntry": false,
+        "env": {
+          "ASPNETCORE_ENVIRONMENT": "Development",
+          "ASPNETCORE_URLS": "https://localhost:7224;http://localhost:5058",
+          "DOTNET_USE_POLLING_FILE_WATCHER": "1"
+        },
+        "console": "internalConsole"
+      },
+      {
+        "name": "📦 Debug Inventory Service",
+        "type": "coreclr",
+        "request": "launch",
+        "preLaunchTask": "📦 Build Inventory Service",
+        "program": "${workspaceFolder:📦 Play.Inventory.Service}/src/Play.Inventory.Service/bin/Debug/net9.0/Play.Inventory.Service.dll",
+        "args": ["--urls", "https://localhost:7216;http://localhost:5073"],
+        "cwd": "${workspaceFolder:📦 Play.Inventory.Service}/src/Play.Inventory.Service",
+        "stopAtEntry": false,
+        "env": {
+          "ASPNETCORE_ENVIRONMENT": "Development",
+          "ASPNETCORE_URLS": "https://localhost:7216;http://localhost:5073",
+          "DOTNET_USE_POLLING_FILE_WATCHER": "1"
+        },
+        "console": "internalConsole"
+      }
+    ],
+    "compounds": [
+      {
+        "name": "🚀 Debug Both Services",
+        "configurations": [
+          "🔧 Debug Catalog Service",
+          "📦 Debug Inventory Service"
+        ],
+        "stopAll": true,
+        "presentation": {
+          "hidden": false,
+          "group": "microservices",
+          "order": 1
+        }
+      }
+    ]
+  }
+}

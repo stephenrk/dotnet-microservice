@@ -2,40 +2,93 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "build",
-            "command": "dotnet",
-            "type": "process",
-            "args": [
-                "build",
-                "${workspaceFolder}/Play.Catalog.sln",
-                "/property:GenerateFullPaths=true",
-                "/consoleloggerparameters:NoSummary;ForceNoAlign"
+            "label": "🔨 Build All Services",
+            "dependsOrder": "sequence",
+            "dependsOn": [
+                "🔧 Build Catalog Service",
+                "📦 Build Inventory Service"
             ],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": false
+            }
+        },
+        {
+            "label": "🔧 Build Catalog Service",
+            "type": "shell",
+            "command": "dotnet",
+            "args": ["build"],
+            "options": {
+                "cwd": "${workspaceFolder}/Play.Catalog/src/Play.Catalog.Service"
+            },
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": false
+            },
             "problemMatcher": "$msCompile"
         },
         {
-            "label": "publish",
+            "label": "📦 Build Inventory Service",
+            "type": "shell",
             "command": "dotnet",
-            "type": "process",
-            "args": [
-                "publish",
-                "${workspaceFolder}/Play.Catalog.sln",
-                "/property:GenerateFullPaths=true",
-                "/consoleloggerparameters:NoSummary;ForceNoAlign"
-            ],
+            "args": ["build"],
+            "options": {
+                "cwd": "${workspaceFolder}/Play.Inventory/src/Play.Inventory.Service"
+            },
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": false
+            },
             "problemMatcher": "$msCompile"
         },
         {
-            "label": "watch",
+            "label": "🧹 Clean All Services",
+            "type": "shell",
             "command": "dotnet",
-            "type": "process",
-            "args": [
-                "watch",
-                "run",
-                "--project",
-                "${workspaceFolder}/Play.Catalog.sln"
+            "args": ["clean"],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": false
+            }
+        },
+        {
+            "label": "🔨 Build and Debug Both Services",
+            "dependsOrder": "sequence",
+            "dependsOn": [
+                "🔨 Build All Services"
             ],
-            "problemMatcher": "$msCompile"
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": false
+            }
         }
     ]
 }

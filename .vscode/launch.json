@@ -2,17 +2,52 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": ".NET Core Debugger (launch)",
+            "name": "🔧 Debug Catalog Service",
             "type": "coreclr",
             "request": "launch",
-            "program": "${command:dotrush.activeTargetPath}",
-            "preLaunchTask": "dotrush: Build"
+            "preLaunchTask": "🔧 Build Catalog Service",
+            "program": "${workspaceFolder}/Play.Catalog/src/Play.Catalog.Service/bin/Debug/net9.0/Play.Catalog.Service.dll",
+            "args": ["--urls", "https://localhost:7224;http://localhost:5058"],
+            "cwd": "${workspaceFolder}/Play.Catalog/src/Play.Catalog.Service",
+            "stopAtEntry": false,
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development",
+                "ASPNETCORE_URLS": "https://localhost:7224;http://localhost:5058",
+                "DOTNET_USE_POLLING_FILE_WATCHER": "1"
+            },
+            "console": "internalConsole"
         },
         {
-            "name": ".NET Core Debugger (attach)",
+            "name": "📦 Debug Inventory Service",
             "type": "coreclr",
-            "request": "attach",
-            "processId": "${command:dotrush.pickProcess}"
+            "request": "launch",
+            "preLaunchTask": "📦 Build Inventory Service",
+            "program": "${workspaceFolder}/Play.Inventory/src/Play.Inventory.Service/bin/Debug/net9.0/Play.Inventory.Service.dll",
+            "args": ["--urls", "https://localhost:7216;http://localhost:5073"],
+            "cwd": "${workspaceFolder}/Play.Inventory/src/Play.Inventory.Service",
+            "stopAtEntry": false,
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development",
+                "ASPNETCORE_URLS": "https://localhost:7216;http://localhost:5073",
+                "DOTNET_USE_POLLING_FILE_WATCHER": "1"
+            },
+            "console": "internalConsole"
+        }
+    ],
+    "compounds": [
+        {
+            "name": "🚀 Debug Both Services",
+            "preLaunchTask": "🔨 Build All Services",
+            "configurations": [
+                "🔧 Debug Catalog Service",
+                "📦 Debug Inventory Service"
+            ],
+            "stopAll": true,
+            "presentation": {
+                "hidden": false,
+                "group": "microservices",
+                "order": 1
+            }
         }
     ]
 }
