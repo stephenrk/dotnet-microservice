@@ -16,6 +16,10 @@ namespace Play.Common.MassTransit
                 {
                     configurator.Host(configuration["RabbitMQSettings:Host"]);
                     configurator.ConfigureEndpoints(context, new KebabCaseEndpointNameFormatter(configuration["ServiceSettings:ServiceName"], false));
+                    configurator.UseMessageRetry(retryConfig =>
+                    {
+                        retryConfig.Interval(3, TimeSpan.FromSeconds(5));
+                    });
                 });
             });
 
