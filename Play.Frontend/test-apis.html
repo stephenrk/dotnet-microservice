@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste das APIs</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ccc; border-radius: 5px; }
+        .success { background-color: #d4edda; border-color: #c3e6cb; }
+        .error { background-color: #f8d7da; border-color: #f5c6cb; }
+        button { padding: 10px 20px; margin: 5px; cursor: pointer; }
+        pre { background: #f8f9fa; padding: 10px; border-radius: 3px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Teste das APIs - Play Store</h1>
+    
+    <div class="test-section">
+        <h3>🔍 Teste Direto das APIs (Pode dar CORS)</h3>
+        <button onclick="testDirectCatalog()">Testar Catalog API Direta</button>
+        <button onclick="testDirectInventory()">Testar Inventory API Direta</button>
+        <div id="direct-results"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>🚀 Teste via Proxy do Vite (Deve funcionar)</h3>
+        <button onclick="testProxyCatalog()">Testar Catalog API via Proxy</button>
+        <button onclick="testProxyInventory()">Testar Inventory API via Proxy</button>
+        <div id="proxy-results"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>📊 Status das APIs</h3>
+        <div id="status-results"></div>
+    </div>
+
+    <script>
+        const DIRECT_CATALOG = 'http://localhost:5058';
+        const DIRECT_INVENTORY = 'http://localhost:5073';
+        const PROXY_CATALOG = '/api/catalog';
+        const PROXY_INVENTORY = '/api/inventory';
+
+        async function testAPI(url, description, resultElement) {
+            try {
+                console.log(`Testando: ${description}`);
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                resultElement.innerHTML = `
+                    <div class="success">
+                        <h4>✅ ${description} - Sucesso!</h4>
+                        <p>Status: ${response.status}</p>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    </div>
+                `;
+            } catch (error) {
+                resultElement.innerHTML = `
+                    <div class="error">
+                        <h4>❌ ${description} - Erro!</h4>
+                        <p>Erro: ${error.message}</p>
+                        <p>Detalhes: ${error}</p>
+                    </div>
+                `;
+                console.error(`Erro ao testar ${description}:`, error);
+            }
+        }
+
+        async function testDirectCatalog() {
+            await testAPI(`${DIRECT_CATALOG}/items`, 'Catalog API Direta', document.getElementById('direct-results'));
+        }
+
+        async function testDirectInventory() {
+            await testAPI(`${DIRECT_INVENTORY}/items?userId=test`, 'Inventory API Direta', document.getElementById('direct-results'));
+        }
+
+        async function testProxyCatalog() {
+            await testAPI(`${PROXY_CATALOG}/items`, 'Catalog API via Proxy', document.getElementById('proxy-results'));
+        }
+
+        async function testProxyInventory() {
+            await testAPI(`${PROXY_INVENTORY}/items?userId=test`, 'Inventory API via Proxy', document.getElementById('proxy-results'));
+        }
+
+        async function checkAPIStatus() {
+            const statusDiv = document.getElementById('status-results');
+            const apis = [
+                { name: 'Catalog API', url: DIRECT_CATALOG, proxy: PROXY_CATALOG },
+                { name: 'Inventory API', url: DIRECT_INVENTORY, proxy: PROXY_INVENTORY }
+            ];
+
+            let statusHTML = '<h4>📊 Status das APIs:</h4>';
+            
+            for (const api of apis) {
+                try {
+                    // Teste direto
+                    const directResponse = await fetch(api.url, { method: 'HEAD' });
+                    const directStatus = directResponse.ok ? '✅ Online' : '⚠️ Erro HTTP';
+                    
+                    // Teste proxy
+                    const proxyResponse = await fetch(api.proxy, { method: 'HEAD' });
+                    const proxyStatus = proxyResponse.ok ? '✅ Online' : '⚠️ Erro HTTP';
+                    
+                    statusHTML += `
+                        <div style="margin: 10px 0; padding: 10px; background: #f8f9fa; border-radius: 3px;">
+                            <strong>${api.name}:</strong><br>
+                            Direta: ${directStatus} (${api.url})<br>
+                            Proxy: ${proxyStatus} (${api.proxy})
+                        </div>
+                    `;
+                } catch (error) {
+                    statusHTML += `
+                        <div style="margin: 10px 0; padding: 10px; background: #f8f9fa; border-radius: 3px;">
+                            <strong>${api.name}:</strong><br>
+                            Direta: ❌ Offline (${api.url})<br>
+                            Proxy: ❌ Offline (${api.proxy})<br>
+                            <small>Erro: ${error.message}</small>
+                        </div>
+                    `;
+                }
+            }
+            
+            statusDiv.innerHTML = statusHTML;
+        }
+
+        // Verificar status ao carregar a página
+        window.onload = function() {
+            setTimeout(checkAPIStatus, 1000);
+        };
+    </script>
+</body>
+</html>
